@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>BUA 345 - Lecture 10</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Penelope Pooler Eisenbies" />
+    <meta name="date" content="2023-02-20" />
+    <script src="docs_files/header-attrs/header-attrs.js"></script>
+    <link href="docs_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="docs_files/panelset/panelset.js"></script>
+    <link href="docs_files/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="docs_files/tile-view/tile-view.js"></script>
+    <script src="docs_files/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="docs_files/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="docs_files/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+background-image: url("docs_files/images/sloth_faded.png")
+background-size: cover
+
+class: bottom, right
+
+## BUA 345 - Lecture 10
+
+### Intro to Correlation, SLR, and MLR in R
+
+&lt;br&gt;
+
+
+#### Penelope Pooler Eisenbies
+
+#### 2023-02-20
+
+[Wikipedia Sloth Page](https://en.wikipedia.org/wiki/Sloth)
+
+---
+
+### Getting Started with Markdown
+
+- Download Zipped R project 
+
+- Open Zipped folder and copy internal folder (R Project) to a BUA 345 folder on your computer NOT IN DOWLOADS
+
+- Click on .Rproj file to open project
+
+- Run Setup Chunk
+
+### Setup
+
+* The setup chunk shows the packages needed for this demo.   
+
+* R will install specified packages if needed (only required once after R is installed)  
+
+* R will load specified packaged (required every time you start a new R session)  
+
+* The first time you run this code, R will install these packages which will be slow.  
+
+* **If you get warnings, that's okay.**  
+
+* If you get **error messages**, I (or TA), can help you.
+
+---
+
+### Setup Chunk for Lecture 11
+
+
+```r
+# this line specifies options for default options for all R Chunks
+knitr::opts_chunk$set(echo=T, highlight=T)
+
+# suppress scientific notation
+options(scipen=100)
+
+# install helper package that loads and installs other packages, if needed
+if (!require("pacman")) install.packages("pacman", repos = "http://lib.stat.cmu.edu/R/CRAN/")
+
+# install and load required packages
+pacman::p_load(pacman,tidyverse, magrittr, olsrr)
+
+# verify packages
+p_loaded()
+```
+
+```
+##  [1] "olsrr"          "xaringanthemer" "magrittr"       "gridExtra"     
+##  [5] "forcats"        "stringr"        "dplyr"          "purrr"         
+##  [9] "readr"          "tidyr"          "tibble"         "ggplot2"       
+## [13] "tidyverse"      "pacman"
+```
+
+---
+
+### Lecture 10 In-class Exercises
+
+#### **Question 1 (L10) - Session ID: bua345s23**
+
+Recall the housing price data from Lecture 9: The hypothesized full model is: 
+
+![](docs_files/images/house_model.png)
+
+where each coefficient in the output is an estimate of a beta from the model and each row shows a one sample two-tailed hypothesis test.
+
+
+![](docs_files/images/mlr_output_for_review_question.png)
+
+---
+
+### Lecture 10 In-class Exercises
+
+#### **Question 1 Continued (L10) - Session ID: bua345s23**
+
+.pull-left[
+We typically use **α = 0.05** as a cutoff in regression, BUT if we had set **α = 0.01**, which variable would not be considered ‘useful’ to the model?
+
+A. Living Area  
+  
+B. Bathrooms  
+  
+C. House Age
+]
+
+.pull-right[
+![](docs_files/images/mlr_output_for_review_question.png)
+]
+
+![](docs_files/images/pv_decisions.png)
+
+
+---
+
+### Plan for Today - Getting Started With R and RStudio
+
+#### Why go beyond Excel?
+
+- Summary statistics, Correlation, SLR, and MLR (sort of) can all be done in Excel.
+
+ - MLR is less efficient and very limited.
+
+- Visualizing data and addressing issues (outliers, curvilinear pattern, etc.) are doable but less efficient.
+
+- In Lecture 12, we will cover categorical variables which Excel can not handle effectively
+
+- Documenting your work is essential in analytical work and is not easily done in Excel.
+
+---
+  
+### Pros and Cons of R and RStudio
+
+#### Pros:
+
+- Analytical flexibility is almost unlimited
+
+- Writing scripts provides a record (documentation) of work
+ 
+- Large repetitive projects can be done as batches once you learn coding (advanced skill)
+ 
+- Software (R) and user interface (R Studio) are FREE!!!! 
+  
+- Visualizations – many high quality flexible options
+
+#### Cons:
+
+- Learning curve is a little steep
+
+- Requires patience and trial and error
+
+---
+
+### Opening R and RStudio
+
+- Default RStudio Screen has Four Panes:
+
+&lt;center&gt;
+
+&lt;img src="docs_files/images/RStudio_Panes.png" width="799" /&gt;
+
+
+&lt;/center&gt;
+---
+
+### Opening R and RStudio
+
+Note: You may only see three panes if no R Markdown or R Scripts are open.
+
+- Upper Left Pane: Source Code
+  - R Markdown files and R scripts
+
+- Lower Left Pane: Console
+    - R input code and output is shown here (and in Markdown file)
+
+- Upper Right Pane: Global Environment
+    - R objects like datasets, plots, values, etc. are stored and listed here
+    
+- Lower Right Pane: Files, Plots, Packages, Help, etc.
+  
+  - Files: Files in R project can be viewed and opened here
+    
+  - Plots: Plots appear here when NOT using R Markdown
+    
+  - Packages: R package library searchable here
+    
+  - Help: Type ?____ fill in the blank with R command or R object to bring up help file.
+
+---
+
+### What version do you have?
+
+#### R version
+
+- R version should appear in your console:
+
+&lt;br&gt;
+
+&lt;center&gt;
+
+&lt;img src="docs_files/images/Rversion_in_console.png" width="850" height="50" /&gt;
+
+&lt;/center&gt;
+
+&lt;br&gt;
+
+
+#### RStudio Version
+
+- In Windows OS, RStudio version appears when you click **Help &gt; About RStudio**
+    
+- In Mac OS, RStudio version appears when you click **RStudio &gt; About RStudio** 
+  
+&lt;center&gt;
+
+&lt;img src="docs_files/images/RStudio_Version_in_AboutRStudio.png" width="300" height="100" /&gt;
+
+&lt;/center&gt;
+
+---
+
+### Opening a Project
+
+**`1.`** Download zipped R project, unzip it and save to your BUA 345 folder on your computer.
+
+&lt;br&gt;
+
+**`2.`** Easiest way to start: 
+
+- Close RStudio before opening a project.
+
+&lt;br&gt;
+
+**`3.`** With RStudio closed, open the R Project Directory folder and click on `.Rproj` file.
+ 
+- **Clicking on `.Rproj` file will open RStudio and R AND open the project at the same time.**
+
+---
+
+### Using R as a Calculator
+
+- The console in R can be used as a calculator
+
+
+### Running code from a Markdown File
+
+#### To run ONLY ONE line of R code:
+
+- Place cursor anywhere line with code and click:
+
+  - Ctrl + Enter (Windows)
+
+  - Cmd + Return (Mac)
+
+- Run button at top of Upper-Right Pane    ![](docs_files/images/run_button.jpg)
+
+#### To run a whole chunk (multiple R commands):
+
+- Click green triangle in upper right of chunk   ![](docs_files/images/green_triangle.jpg)
+
+  - Ctrl + Shift + Enter (Windows)
+
+  - Cmd + Shift + Return (Mac)
+
+---
+
+### Lecture 10 In-class Exercises
+
+#### **Question 2 (L10) - Session ID: bua345s23**
+  
+Below is small R Chunk with a calculation.
+ - `#` before text indicates a comment. R will ignore this text.
+ 
+
+```r
+(10*3) + sqrt(987) - (2*4) + 4567               # unrounded calculation
+((10*3) + sqrt(987) - (2*4) + 4567) |&gt; round(2) # rounded to 2 decimal places
+```
+
+Experiment with running the lines one at a time and running th whole chunk.
+
+The output should appear below the chunk and in the Console (Lower Left Pane)  
+
+What is the value from these calculations, rounded to 2 decimal places?
+
+A. 4620.12
+  
+B. 4680.42
+  
+C. 4660.32
+  
+D. 4620.42
+
+---
+
+### Lecture 10 In-class Exercises
+
+#### **Question 3 (L10) - Session ID: bua345s23** 
+
+#### Creating and Saving Objects in R - Entering small datasets manually 
+
+**`1.`** Copy and paste the R code shown below into the provided R Chunk.
+
+
+```r
+ages &lt;- c(21,18,27,43,56,23,23,25,29,40)   # create ages data vector
+median(ages)                               # calculate median of ages
+summary(ages)                              # calculate summary statistics for ages data
+```
+
+
+**`2.`** Run this code to create a numerical variable named `ages`.
+
+**`3.`** Notice that `ages` appears in the `Global Environment`.
+
+**`4.`** Find the median of `ages` using the `median` command.
+
+The median of the `ages` data is:
+  
+A. 24  
+B. 25  
+C. 26  
+D. 27  
+E. 28  
+
+---
+
+
+.pull-left[
+
+#### Types of Data in R
+
+- **Character:** *`&lt;chr&gt;`* or string values
+  
+  - These values appear as text in quotes
+  
+  - e.g. names, eye-color, days of the week, etc.
+  
+&lt;br&gt;
+  
+- **Double:** *`&lt;dbl&gt;`* or decimal numeric values
+
+&lt;br&gt;
+
+- **Integer:** *`&lt;int&gt;`* integer numeric values
+
+&lt;br&gt;
+
+- **Logical:** *`&lt;lgl&gt;`* `TRUE`/ `FALSE` or `T`/`F`, MUST be UPPERCASE
+
+&lt;br&gt;
+  
+- **Factor:** *`&lt;fct&gt;`* Categorical variables can be created from other data types above.
+
+]
+
+.pull-right[
+
+#### Objects in R
+
+- **Datasets, values, arrays(vectors)**, can all be saved as objects.  
+  
+   - No quotes are used in object names
+   
+   - Saved objects appear in the Global Environment 
+   
+   - Helpful to make object names be one lower case word with no spaces
+      - Use underscores in place of spaces, if needed
+      
+   - Any calculation you do can also be stored as an object.
+
+
+]
+
+
+
+
+
+---
+
+### Importing Data into R
+
+- In BUA 345, all data files will be stored in R Project `code_data_output` folder with R Markdown file
+
+- `tidyverse` package must be loaded in `setup` chunk above
+
+- running this code will save `houses` dataset to the `Global Environment`.
+
+- `#` before text indicates a comment. R will ignore this text.**
+
+
+```r
+houses &lt;- read_csv("houses.csv")                     # import houses data
+houses &lt;- read_csv("houses.csv", show_col_types = F) # same command with message surpressed
+
+# same command with glimpse afterwards to examine data
+# pipe |&gt; operator used to make code more efficient
+
+houses &lt;- read_csv("houses.csv", show_col_types = F) |&gt; glimpse()                                                               
+```
+
+```
+## Rows: 200
+## Columns: 4
+## $ Selling_Price &lt;dbl&gt; 217314, 238792, 222330, 206688, 88207, 236936, 90678, 10…
+## $ Living_Area   &lt;dbl&gt; 2498, 2250, 2712, 2284, 1480, 2300, 957, 1673, 3003, 957…
+## $ Bathrooms     &lt;dbl&gt; 2.5, 2.5, 3.0, 2.5, 1.5, 2.5, 1.0, 2.0, 3.5, 1.0, 1.5, 1…
+## $ House_Age     &lt;dbl&gt; 14, 10, 1, 17, 14, 16, 49, 18, 88, 49, 3, 180, 14, 33, 1…
+```
+
+---
+
+### Examining Data - Variable Summaries and Correlations in R
+  
+
+
+```r
+houses |&gt; select(Living_Area) |&gt; summary() # summary of living area (with piping)
+```
+
+```
+##   Living_Area  
+##  Min.   : 672  
+##  1st Qu.:1350  
+##  Median :1665  
+##  Mean   :1798  
+##  3rd Qu.:2197  
+##  Max.   :3981
+```
+
+```r
+summary(houses$Living_Area)                # summary of living area without piping
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     672    1350    1665    1798    2197    3981
+```
+
+```r
+houses |&gt; summary()                        # summary of houses data (with piping)                                   
+```
+
+```
+##  Selling_Price     Living_Area     Bathrooms       House_Age     
+##  Min.   : 16858   Min.   : 672   Min.   :1.000   Min.   :  0.00  
+##  1st Qu.:110915   1st Qu.:1350   1st Qu.:1.500   1st Qu.:  9.00  
+##  Median :150095   Median :1665   Median :2.000   Median : 18.00  
+##  Mean   :165000   Mean   :1798   Mean   :1.893   Mean   : 28.45  
+##  3rd Qu.:204648   3rd Qu.:2197   3rd Qu.:2.500   3rd Qu.: 34.00  
+##  Max.   :466044   Max.   :3981   Max.   :3.500   Max.   :185.00
+```
+
+---
+
+### Examining Data - Variable Summaries and Correlations in R
+  
+
+```r
+summary(houses)                            # summary without piping
+```
+
+
+```r
+houses |&gt; cor()                            # correlation matrix for houses (with piping)
+```
+
+```
+##               Selling_Price Living_Area  Bathrooms  House_Age
+## Selling_Price     1.0000000   0.7722650  0.7059318 -0.3771035
+## Living_Area       0.7722650   1.0000000  0.6601296 -0.2189820
+## Bathrooms         0.7059318   0.6601296  1.0000000 -0.5155437
+## House_Age        -0.3771035  -0.2189820 -0.5155437  1.0000000
+```
+
+```r
+cor(houses)                                # correlation matrix for houses (without piping)
+```
+
+```
+##               Selling_Price Living_Area  Bathrooms  House_Age
+## Selling_Price     1.0000000   0.7722650  0.7059318 -0.3771035
+## Living_Area       0.7722650   1.0000000  0.6601296 -0.2189820
+## Bathrooms         0.7059318   0.6601296  1.0000000 -0.5155437
+## House_Age        -0.3771035  -0.2189820 -0.5155437  1.0000000
+```
+
+---
+
+### Lecture 10 In-class Exercises
+
+.pull-left[
+
+#### **Question 4 (L10) - Session ID: bua345s23** 
+
+What is the maximum selling price in the houses data? 
+
+Round answer to closest thousand (K)
+
+A. 150 K     
+B. 165 K    
+C. 205 K    
+D. 291 K    
+E. 466 K    
+F. 521 K    
+
+]
+
+.pull-right[
+
+
+
+```r
+# unrounded using summary()
+houses |&gt; pull(Selling_Price) |&gt; summary() 
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   16858  110915  150095  165000  204648  466044
+```
+
+```r
+ # unrounded using max()
+houses |&gt; pull(Selling_Price) |&gt; max()     
+```
+
+```
+## [1] 466044
+```
+
+```r
+# rounded to closest thousand
+# round(-3) means round to third place before decimal (thousands)
+houses |&gt; pull(Selling_Price) |&gt; summary() |&gt; round(-3)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   17000  111000  150000  165000  205000  466000
+```
+
+```r
+houses |&gt; pull(Selling_Price) |&gt; max() |&gt; round(-3)
+```
+
+```
+## [1] 466000
+```
+
+]
+
+
+---
+
+
+### Lecture 10 In-class Exercises
+
+#### **Question 5 (L10) - Session ID: bua345s23** 
+
+What is the correlation between `House_Age` and `Living_Area` in the `houses` dataset? Round answer to two decimal places. 
+
+A. 0.77    
+B. 0.71    
+C. 0.66    
+D. -0.22    
+E. -0.38   
+F. -0.52    
+    
+NOTE:  All values in correlation matrix can be rounded at once with `round` command.
+
+
+```r
+houses |&gt; cor() |&gt; round(2)   # rounded correlation matrix to two decimal places with piping
+```
+
+```
+##               Selling_Price Living_Area Bathrooms House_Age
+## Selling_Price          1.00        0.77      0.71     -0.38
+## Living_Area            0.77        1.00      0.66     -0.22
+## Bathrooms              0.71        0.66      1.00     -0.52
+## House_Age             -0.38       -0.22     -0.52      1.00
+```
+
+---
+
+### Simple Linear Regression (SLR) in R
+
+- **`olsrr`** package must be loaded in **`setup`** chunk
+
+- **Enclose model command in parentheses so that it is BOTH saved to 'Global Environment' AND printed to screen.**
+
+#### New Term to Know, R&lt;sup&gt;2&lt;/sup&gt;
+
+&lt;img src="docs_files/images/r_squared.jpg" width="800" height="250" /&gt;
+
+---
+
+### Review of Parameter Estimates Output
+
+- **model** column lists intercept and X variables in model
+
+- ***Beta*** column shows the estimate (***b***) of the Beta coefficient for each variable in model.
+
+- **Std. Error** shows variability of each estimated ***Beta***.
+
+- **t** = Beta/Std. Error, the test statistic for each Beta estimate
+
+- **Sig** is P-value for Hypothesis test for each Beta estimate:
+
+  - Recall Interpretation guidelines for P-value:
+
+&lt;center&gt;
+![](docs_files/images/pv_decisions.png)
+
+---
+
+### R code to create and view a MLR model
+
+
+
+```r
+# slr model with just living area
+(houses_slr &lt;- ols_regress(Selling_Price ~ Living_Area, data = houses))
+```
+
+#### Abridged SLR Output:
+
+&lt;img src="docs_files/images/slr_out1.jpg" width="581" /&gt;&lt;img src="docs_files/images/slr_out2.jpg" width="793" /&gt;
+
+---
+
+### Multiple Linear Regression (MLR) in R
+
+- Extending this model to Multiple Linear Regression is straightforward.
+- Additional terms are added to the model with a `+` sign between them:
+- MLR model for houses data:
+
+
+
+```r
+# mlr model with living area, bathrooms and house age in model
+(houses_mlr &lt;- ols_regress(Selling_Price ~ Living_Area + Bathrooms + House_Age, data = houses))
+```
+
+#### Abridged MLR Output:
+
+&lt;img src="docs_files/images/mlr_out1.jpg" width="569" /&gt;&lt;img src="docs_files/images/mlr_out2.jpg" width="801" /&gt;
+
+
+---
+
+### Lecture 10 In-class Exercises
+
+#### **Question 6 (L10) - Session ID: bua345s23**  
+
+Assuming number of bathrooms and age of a house are unchanged, what would be the CHANGE in price due **SOLELY to building an addition that adds 300 square feet to the living area?**   
+Round answer to closest thousand dollars (K)
+
+A. 14 K  
+B. 16 K  
+C. 18 K  
+D. 20 K  
+E. 22 K  
+
+
+
+```r
+# two ways to save beta value
+
+b_lvng_area &lt;- 60.614                     # type value manually
+
+b_lvng_area &lt;- houses_mlr$betas[2]        # use stored betas vector (not required)
+
+(b_lvng_area*300) |&gt; round(-3)            # answer to question
+```
+
+---
+
+### HW 5
+
+- HW 5 will include an R Project with an R Markdown template 
+
+- You will add code and run it.
+
+- Edit text portions with your own notes 
+
+- Add comments to R code in chunks using `#`
+
+&lt;br&gt;
+
+### Looking Ahead:
+  
+- Today’s methods could have been done in Excel 
+
+- Next topics are not feasible in Excel
+
+- On Thursday: histograms, log transformations, more MLR
+
+- Next week: adding categorical terms and Interaction terms to model
+
+---
+
+background-image: url("docs_files/images/tired_panda_faded.png")
+background-size: cover
+
+.pull-left[
+
+### **Key Points from Today**
+
+.bg-azure.b--dark_cyan.ba.bw2.br3.shadow-5.ph2[
+
+#### Concepts Covered:
+
+* Using R and RStudio 
+* Opening R Projects
+* Running setup to install and load required R packages
+* Importing and Examining Data
+* Calculating data summaries and correlations
+* Running SLR and MLR models and examining output
+
+#### Additional Related Concepts:
+
+* Document each step and add comments to script
+* R Markdown is great for saving code and output in one file
+
+]
+
+]
+
+.pull-right[
+
+.bg-azure.b--dark_cyan.ba.bw2.br3.shadow-5.ph3[
+You may submit an 'Engagement Question' about each lecture until midnight on the day of the lecture. **A minimum of four submissions are required during the semester.**
+]
+
+]
+
+
+
+
+
+
+
+  
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%/%total%",
+"highlightStyle": "tomorrow-night-bright",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true,
+"keep_md": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
