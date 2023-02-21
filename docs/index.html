@@ -81,7 +81,7 @@ class: bottom, right
 
 ---
 
-### Setup Chunk for Lecture 11
+### Setup Chunk for Lecture 10
 
 
 ```r
@@ -125,12 +125,14 @@ where each coefficient in the output is an estimate of a beta from the model and
 
 ---
 
+.pull-left[
+
 ### Lecture 10 In-class Exercises
 
 #### **Question 1 Continued (L10) - Session ID: bua345s23**
 
-.pull-left[
-We typically use **α = 0.05** as a cutoff in regression, BUT if we had set **α = 0.01**, which variable would not be considered ‘useful’ to the model?
+**We typically use **α = 0.05** as a cutoff in regression.
+If we had set **α = 0.01**, which variable would not be considered ‘useful’ to the model?**
 
 A. Living Area  
   
@@ -140,7 +142,9 @@ C. House Age
 ]
 
 .pull-right[
-![](docs_files/images/mlr_output_for_review_question.png)
+
+&lt;img src="docs_files/images/hypotheses_smaller.png" width="349" /&gt;&lt;img src="docs_files/images/mlr_output_for_review_question.png" width="373" /&gt;
+
 ]
 
 ![](docs_files/images/pv_decisions.png)
@@ -233,7 +237,7 @@ Note: You may only see three panes if no R Markdown or R Scripts are open.
 
 &lt;center&gt;
 
-&lt;img src="docs_files/images/Rversion_in_console.png" width="850" height="50" /&gt;
+&lt;img src="docs_files/images/Rversion_in_console.png" width="900" height="50" /&gt;
 
 &lt;/center&gt;
 
@@ -316,7 +320,7 @@ Experiment with running the lines one at a time and running th whole chunk.
 
 The output should appear below the chunk and in the Console (Lower Left Pane)  
 
-What is the value from these calculations, rounded to 2 decimal places?
+**What is the value from these calculations, rounded to 2 decimal places?**
 
 A. 4620.12
   
@@ -350,7 +354,7 @@ summary(ages)                              # calculate summary statistics for ag
 
 **`4.`** Find the median of `ages` using the `median` command.
 
-The median of the `ages` data is:
+**The median of the `ages` data is:**
   
 A. 24  
 B. 25  
@@ -393,7 +397,7 @@ E. 28
 
 #### Objects in R
 
-- **Datasets, values, arrays(vectors)**, can all be saved as objects.  
+- **Datasets, values, arrays (vectors)**, can all be saved as objects.  
   
    - No quotes are used in object names
    
@@ -522,15 +526,15 @@ cor(houses)                                # correlation matrix for houses (with
 
 ---
 
-### Lecture 10 In-class Exercises
-
 .pull-left[
+
+### Lecture 10 In-class Exercises
 
 #### **Question 4 (L10) - Session ID: bua345s23** 
 
-What is the maximum selling price in the houses data? 
+**What is the maximum selling price in the houses data?** 
 
-Round answer to closest thousand (K)
+**Round answer to closest thousand (K)**
 
 A. 150 K     
 B. 165 K    
@@ -593,7 +597,7 @@ houses |&gt; pull(Selling_Price) |&gt; max() |&gt; round(-3)
 
 #### **Question 5 (L10) - Session ID: bua345s23** 
 
-What is the correlation between `House_Age` and `Living_Area` in the `houses` dataset? Round answer to two decimal places. 
+**What is the correlation between `House_Age` and `Living_Area` in the `houses` dataset? Round answer to two decimal places.** 
 
 A. 0.77    
 B. 0.71    
@@ -689,8 +693,9 @@ houses |&gt; cor() |&gt; round(2)   # rounded correlation matrix to two decimal 
 
 #### **Question 6 (L10) - Session ID: bua345s23**  
 
-Assuming number of bathrooms and age of a house are unchanged, what would be the CHANGE in price due **SOLELY to building an addition that adds 300 square feet to the living area?**   
-Round answer to closest thousand dollars (K)
+**Assuming number of bathrooms and age of a house are unchanged, what would be the CHANGE in price due *SOLELY to building an addition that adds 300 square feet to the living area?***   
+ 
+**Round answer to closest thousand dollars (K)**
 
 A. 14 K  
 B. 16 K  
