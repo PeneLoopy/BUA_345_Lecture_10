@@ -39,7 +39,7 @@ if (!require("pacman")) install.packages("pacman", repos = "http://lib.stat.cmu.
 
 # install and load required packages
 # pacman should be first package in parentheses and then list others
-pacman::p_load(pacman, tidyverse, gridExtra, magrittr)
+pacman::p_load(pacman, tidyverse, gridExtra, magrittr, tools)
 
 # verify packages (comment out in finished documents)
 p_loaded()
@@ -338,40 +338,26 @@ Note: You may only see three panes if no R Markdown or R Scripts are open.
 
 ### What version do you have?
 
-#### R version
+#### R version ![](docs_files/images/R_version.jpg)
 
-- R version should appear in your console:
+- R version appears in console when you open R and RStudio.
 
-<br>
+- Also appears in bar above console  
 
-<center>
+- Alternatively type `version$version.string` in console
 
-```{r echo=F, out.height=50, out.width=900}
-
-knitr::include_graphics("docs_files/images/Rversion_in_console.png")
-
+```{r r version,}
+version$version.string
 ```
 
-</center>
-
-<br>
-
-
-#### RStudio Version
+#### RStudio Version ![](docs_files/images/RStudio_Version_in_AboutRStudio.png)
 
 - In Windows OS, RStudio version appears when you click **Help > About RStudio**
     
 - In Mac OS, RStudio version appears when you click **RStudio > About RStudio** 
-  
-<center>
 
-```{r echo=F, out.height=100, out.width=300}
+- Alternatively, type `RStudio.Version()$version` in the console
 
-knitr::include_graphics("docs_files/images/RStudio_Version_in_AboutRStudio.png")
-
-```
-
-</center>
 
 ---
 
