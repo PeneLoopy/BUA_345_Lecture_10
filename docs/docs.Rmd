@@ -202,6 +202,10 @@ pacman::p_load(pacman,tidyverse, magrittr, olsrr)
 p_loaded()
 
 ```
+<br>
+
+**NOTE:** Don't worry about `xaringanthemer` package.  That is required for my slides but not for your code.
+
 
 ---
 
