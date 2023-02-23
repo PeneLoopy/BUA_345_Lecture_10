@@ -18,25 +18,27 @@ output:
 
 - Click on .Rproj file to open project
 
-- Run Setup Chunk
+- Click on `code_data_output` file to open it.
+
+- Click on `BUA_345_Lecture_10.Rmd` to open it.
+
+- Run Setup Chunk.
+
+---
 
 ### Setup
 
----
+- The setup chunk shows the packages needed for this demo.   
 
-* The setup chunk shows the packages needed for this demo.   
+- R will install specified packages if needed (only required once after R is installed)  
 
-* R will install specified packages if needed (only required once after R is installed)  
+- R will load specified packaged (required every time you start a new R session)  
 
-* R will load specified packaged (required every time you start a new R session)  
+- The first time you run this code, R will install these packages which will be slow.  
 
-* The first time you run this code, R will install these packages which will be slow.  
+- **If you get warnings, that's okay.**  
 
----
-
-* **If you get warnings, that's okay.**  
-
-* If you get **error messages**, I (or TA), can help you.
+- If you get **error messages**, I (or TA), can help you.
 
 ---
 

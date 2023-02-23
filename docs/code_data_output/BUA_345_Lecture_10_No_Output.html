@@ -11,7 +11,7 @@
 
 <meta name="author" content="Penelope Pooler Eisenbies" />
 
-<meta name="date" content="2023-02-20" />
+<meta name="date" content="2023-02-22" />
 
 <title>BUA 455 Lecture 10</title>
 
@@ -1575,7 +1575,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">BUA 455 Lecture 10</h1>
 <h4 class="author">Penelope Pooler Eisenbies</h4>
-<h4 class="date">2023-02-20</h4>
+<h4 class="date">2023-02-22</h4>
 
 </div>
 
@@ -1587,12 +1587,14 @@ border-radius: 0px;
 <li><p>Open Zipped folder and copy internal folder (R Project) to a BUA
 345 folder on your computer NOT IN DOWLOADS</p></li>
 <li><p>Click on .Rproj file to open project</p></li>
-<li><p>Run Setup Chunk</p></li>
+<li><p>Click on <code>code_data_output</code> file to open it.</p></li>
+<li><p>Click on <code>BUA_345_Lecture_10.Rmd</code> to open it.</p></li>
+<li><p>Run Setup Chunk.</p></li>
 </ul>
+<hr />
 </div>
 <div id="setup" class="section level3">
 <h3>Setup</h3>
-<hr />
 <ul>
 <li><p>The setup chunk shows the packages needed for this demo.</p></li>
 <li><p>R will install specified packages if needed (only required once
@@ -1601,9 +1603,6 @@ after R is installed)</p></li>
 new R session)</p></li>
 <li><p>The first time you run this code, R will install these packages
 which will be slow.</p></li>
-</ul>
-<hr />
-<ul>
 <li><p><strong>If you get warnings, that’s okay.</strong></p></li>
 <li><p>If you get <strong>error messages</strong>, I (or TA), can help
 you.</p></li>
@@ -1613,7 +1612,7 @@ you.</p></li>
 <div id="setup-chunk-for-lecture-10" class="section level3">
 <h3>Setup Chunk for Lecture 10</h3>
 <pre class="r"><code># this line specifies options for default options for all R Chunks
-knitr::opts_chunk$set(echo=T, highlight=T, eval=F)
+knitr::opts_chunk$set(echo=T, highlight=T, results = &#39;hide&#39;)
 
 # suppress scientific notation
 options(scipen=100)
@@ -1691,8 +1690,15 @@ E. 28</p>
 <li><p><code>#</code> before text indicates a comment. R will ignore
 this text.**</p></li>
 </ul>
-<pre class="r"><code>houses &lt;- read_csv(&quot;houses.csv&quot;)                     # import houses data
-houses &lt;- read_csv(&quot;houses.csv&quot;, show_col_types = F) # same command with message surpressed
+<pre class="r"><code>houses &lt;- read_csv(&quot;houses.csv&quot;)                     # import houses data</code></pre>
+<pre><code>## Rows: 200 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (4): Selling_Price, Living_Area, Bathrooms, House_Age
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>houses &lt;- read_csv(&quot;houses.csv&quot;, show_col_types = F) # same command with message surpressed
 
 # same command with glimpse afterwards to examine data
 # pipe |&gt; operator used to make code more efficient

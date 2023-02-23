@@ -163,6 +163,10 @@ class: bottom, right
 
 - Click on .Rproj file to open project
 
+- Click on `code_data_output` file to open it.
+
+- Click on `BUA_345_Lecture_10.Rmd` to open it.
+
 - Run Setup Chunk
 
 ### Setup
@@ -783,17 +787,17 @@ background-size: cover
 
 #### Concepts Covered:
 
-* Using R and RStudio 
-* Opening R Projects
-* Running setup to install and load required R packages
-* Importing and Examining Data
-* Calculating data summaries and correlations
-* Running SLR and MLR models and examining output
+- Using R and RStudio 
+- Opening R Projects
+- Running setup to install and load required R packages
+- Importing and Examining Data
+- Calculating data summaries and correlations
+- Running SLR and MLR models and examining output
 
 #### Additional Related Concepts:
 
-* Document each step and add comments to script
-* R Markdown is great for saving code and output in one file
+- Document each step and add comments to script
+- R Markdown is great for saving code and output in one file
 
 ]
 
